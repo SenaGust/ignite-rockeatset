@@ -9,9 +9,21 @@ import {
   StartCountdownButton,
   TaskInput,
 } from "./Home.styles";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as zod from "zod";
+
+const newCycleFormValidationSchema = zod.object({
+  task: zod.string().min(1, "task name should have more than 1 character"),
+  countdownInMinutes: zod
+    .number()
+    .min(5)
+    .max(60, "the countdown should have less than 60 minutes"),
+});
 
 export function Home() {
-  const { register, handleSubmit, watch } = useForm();
+  const { register, handleSubmit, watch } = useForm({
+    resolver: zodResolver(newCycleFormValidationSchema),
+  });
   const hasTask = Boolean(watch("task"));
   const isSubmitDisabled = !hasTask;
 
@@ -28,6 +40,7 @@ export function Home() {
             id="task"
             placeholder="task name"
             list="task-suggestions"
+            required
             {...register("task")}
           />
 
