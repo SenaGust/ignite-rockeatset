@@ -20,15 +20,22 @@ const newCycleFormValidationSchema = zod.object({
     .max(60, "the countdown should have less than 60 minutes"),
 });
 
+type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
+
 export function Home() {
-  const { register, handleSubmit, watch } = useForm({
+  const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
+    defaultValues: {
+      countdownInMinutes: 0,
+      task: "",
+    },
   });
   const hasTask = Boolean(watch("task"));
   const isSubmitDisabled = !hasTask;
 
   function handleCreateNewCycle(data: any) {
     console.log(data);
+    reset();
   }
 
   return (
