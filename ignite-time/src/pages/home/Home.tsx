@@ -1,4 +1,4 @@
-import { Play } from "phosphor-react";
+import { HandPalm, Play } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import {
   CountDownContainer,
@@ -7,6 +7,7 @@ import {
   FormContainer,
   HomeContainer,
   StartCountdownButton,
+  StopCountdownButton,
   TaskInput,
 } from "./Home.styles";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,7 +19,7 @@ const newCycleFormValidationSchema = zod.object({
   task: zod.string().min(1, "task name should have more than 1 character"),
   countdownInMinutes: zod
     .number()
-    .min(5)
+    .min(1)
     .max(60, "the countdown should have less than 60 minutes"),
 });
 
@@ -29,6 +30,8 @@ interface Cycle {
   task: string;
   countdownInMinutes: number;
   startDate: Date;
+  interruptedDate?: Date;
+  finishedDate?: Date;
 }
 
 export function Home() {
@@ -73,38 +76,69 @@ export function Home() {
     reset();
   }
 
+  function handleStopCycle() {
+    setCycles((state) =>
+      state.map((cycle) => {
+        if (cycle.id === activeCycleId) {
+          return { ...cycle, interruptedDate: new Date() };
+        }
+
+        return cycle;
+      })
+    );
+    setActiveCycleId(null);
+  }
+
   useEffect(() => {
     let interval: number;
 
     if (activeCycle) {
       interval = setInterval(() => {
-        setAmountSecondsPassed(
-          differenceInSeconds(new Date(), activeCycle.startDate)
+        const secondsDifference = differenceInSeconds(
+          new Date(),
+          activeCycle.startDate
         );
-      }, 1);
+
+        if (secondsDifference >= countDownInSeconds) {
+          setCycles((state) =>
+            state.map((cycle) => {
+              if (cycle.id === activeCycleId) {
+                return { ...cycle, finishedDate: new Date() };
+              } else {
+                return cycle;
+              }
+            })
+          );
+          setAmountSecondsPassed(countDownInSeconds);
+          setActiveCycleId(null);
+          clearInterval(interval);
+        } else {
+          setAmountSecondsPassed(secondsDifference);
+        }
+      }, 1000);
     }
 
     return () => {
       clearInterval(interval);
     };
-  }, [activeCycle]);
+  }, [activeCycle, countDownInSeconds, activeCycleId]);
 
   useEffect(() => {
     if (activeCycle) {
       document.title = `${minutesFormatted}:${secondsFormatted}`;
     }
-  }, [minutesFormatted, secondsFormatted]);
+  }, [minutesFormatted, secondsFormatted, activeCycle]);
 
   return (
     <HomeContainer>
-      <form onSubmit={handleSubmit(handleCreateNewCycle)} action="">
+      <form onSubmit={handleSubmit(handleCreateNewCycle)}>
         <FormContainer>
           <label htmlFor="task">I will work with </label>
           <TaskInput
             id="task"
             placeholder="task name"
             list="task-suggestions"
-            required
+            disabled={!!activeCycle}
             {...register("task")}
           />
 
@@ -119,10 +153,11 @@ export function Home() {
           <CountdownInput
             id="countdownInMinutes"
             type="number"
+            disabled={!!activeCycle}
             placeholder="00"
-            step="5"
-            min="0"
-            max="60"
+            step={1}
+            min={1}
+            max={60}
             {...register("countdownInMinutes", { valueAsNumber: true })}
           />
 
@@ -137,10 +172,19 @@ export function Home() {
           <span>{secondsFormatted[1]}</span>
         </CountDownContainer>
 
-        <StartCountdownButton disabled={isSubmitDisabled} type="submit">
-          <Play />
-          Start
-        </StartCountdownButton>
+        {Boolean(activeCycle) && (
+          <StopCountdownButton type="button" onClick={handleStopCycle}>
+            <HandPalm size={24} />
+            Stop
+          </StopCountdownButton>
+        )}
+
+        {!activeCycle && (
+          <StartCountdownButton disabled={isSubmitDisabled} type="submit">
+            <Play size={24} />
+            Start
+          </StartCountdownButton>
+        )}
       </form>
     </HomeContainer>
   );
