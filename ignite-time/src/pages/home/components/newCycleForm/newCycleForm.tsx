@@ -3,7 +3,7 @@ import {
   FormContainer,
   TaskInput,
 } from "./newCycleForm.styles";
-import { CyclesContext } from "../../Home";
+import { CyclesContext } from "../../../../contexts/CyclesContextProvider";
 import { useContext } from "react";
 import { useFormContext } from "react-hook-form";
 
