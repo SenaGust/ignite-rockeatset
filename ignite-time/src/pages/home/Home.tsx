@@ -10,7 +10,7 @@ import * as zod from "zod";
 import { useContext } from "react";
 import { Countdown } from "./components/countdown/Countdown";
 import { NewCycleForm } from "./components/newCycleForm/newCycleForm";
-import { CyclesContext } from "../../contexts/CyclesContextProvider";
+import { CyclesContext } from "../../layouts/CyclesContextProvider";
 
 const newCycleFormValidationSchema = zod.object({
   task: zod.string().min(1, "task name should have more than 1 character"),
