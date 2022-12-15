@@ -1,6 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import * as RadioGroup from "@radix-ui/react-radio-group";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { ArrowCircleUp, ArrowCircleDown, X } from "phosphor-react";
 import {
   Overlay,
@@ -25,7 +25,7 @@ export function NewTransactionModal() {
   const {
     register,
     handleSubmit,
-
+    control,
     formState: { isSubmitting },
   } = useForm<NewTransactionFormInputs>({
     resolver: zodResolver(newTransactionFormSchema),
@@ -70,17 +70,25 @@ export function NewTransactionModal() {
             {...register("category")}
           />
 
-          <TransactionType {...register("type")}>
-            <TransactionTypeButton variant="income" value="income">
-              <ArrowCircleUp size={24} />
-              Income
-            </TransactionTypeButton>
+          <Controller
+            control={control}
+            name="type"
+            render={({ field: { onChange, value } }) => {
+              return (
+                <TransactionType onValueChange={onChange} value={value}>
+                  <TransactionTypeButton variant="income" value="income">
+                    <ArrowCircleUp size={24} />
+                    Income
+                  </TransactionTypeButton>
 
-            <TransactionTypeButton variant="outcome" value="outcome">
-              <ArrowCircleDown size={24} />
-              Outcome
-            </TransactionTypeButton>
-          </TransactionType>
+                  <TransactionTypeButton variant="outcome" value="outcome">
+                    <ArrowCircleDown size={24} />
+                    Outcome
+                  </TransactionTypeButton>
+                </TransactionType>
+              );
+            }}
+          />
 
           <button disabled={isSubmitting} type="submit">
             Create
