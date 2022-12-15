@@ -31,8 +31,8 @@ export function TransactionsPage() {
         <TransactionsTable>
           <tbody>
             {transactions.map(
-              ({ category, createdAt, type, description, price }) => (
-                <tr>
+              ({ category, id, createdAt, type, description, price }) => (
+                <tr key={id}>
                   <td width="40%">{description}</td>
                   <td>
                     <PriceHighlight variant={type}>
