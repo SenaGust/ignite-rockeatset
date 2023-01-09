@@ -10,12 +10,13 @@
     "dev": "npm run build -- --watch",
     "lint": "eslint src/**/*.ts* --fix"
   },
-  "keywords": [],
+  "prettier": "@ignite-ui/prettier-config",
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@ignite-ui/eslint-config": "*",
     "@ignite-ui/ignite-tokens": "*",
+    "@ignite-ui/prettier-config": "*",
     "@ignite-ui/ts-config": "*",
     "typescript": "^4.9.4",
     "tsup": "^6.5.0"

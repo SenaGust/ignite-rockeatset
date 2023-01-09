@@ -1,0 +1,9 @@
+{
+  "name": "@ignite-ui/prettier-config",
+  "private": true,
+  "license": "MIT",
+  "main": "index.js",
+  "devDependencies": {
+    "eslint": "^8.31.0"
+  }
+}
