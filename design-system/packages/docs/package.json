@@ -20,13 +20,17 @@
     "@storybook/testing-library": "^0.0.13",
     "@vitejs/plugin-react": "^3.0.1",
     "babel-loader": "^8.3.0",
+    "babel-preset-react": "^6.24.1",
+    "typescript": "^4.9.4",
     "vite": "^4.0.4"
   },
   "dependencies": {
-    "@ignite-ui/ignite-tokens": "*",
-    "@ignite-ui/react": "*",
     "@ignite-ui/eslint-config": "*",
+    "@ignite-ui/ignite-tokens": "*",
     "@ignite-ui/prettier-config": "*",
+    "@ignite-ui/react": "*",
+    "@ignite-ui/ts-config": "*",
+    "polished": "^4.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }
