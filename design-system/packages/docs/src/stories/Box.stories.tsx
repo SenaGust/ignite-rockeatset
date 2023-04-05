@@ -1,14 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Box, BoxProps, Text } from '@ignite-ui/react';
+import { Avatar, AvatarProps } from '@ignite-ui/react';
 
 export default {
-  title: 'Form/Box',
-  component: Box,
+  title: 'Data display/Avatar',
+  component: Avatar,
   args: {
-    children: <Text>Testing box element</Text>,
+    src: 'https://github.com/diego3g.png',
+    alt: 'Diego Fernandes',
   },
-} as Meta<BoxProps>;
+} as Meta<AvatarProps>;
 
-export const box: StoryObj<BoxProps> = {
-  args: {},
+export const Primary: StoryObj<AvatarProps> = {};
+
+export const WithFallback: StoryObj<AvatarProps> = {
+  args: {
+    src: undefined,
+  },
 };
