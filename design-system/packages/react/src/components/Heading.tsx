@@ -24,6 +24,8 @@ export const Heading = styled('h2', {
   defaultVariants: { size: 'md' },
 });
 
+Heading.displayName = 'Heading';
+
 export interface HeadingProps extends ComponentProps<typeof Heading> {
   as?: ElementType;
 }

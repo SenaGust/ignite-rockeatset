@@ -9,4 +9,6 @@ export const Box = styled('div', {
   border: '1    px solid $gray600',
 });
 
+Box.displayName = 'Box';
+
 export type BoxProps = ComponentProps<typeof Box>;

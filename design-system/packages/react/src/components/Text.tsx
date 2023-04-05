@@ -29,6 +29,8 @@ export const Text = styled('p', {
   defaultVariants: { size: 'md' },
 });
 
+Text.displayName = 'Text';
+
 export interface TextProps extends ComponentProps<typeof Text> {
   as?: ElementType;
 }
