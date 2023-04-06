@@ -1,7 +1,7 @@
 import type { AppProps } from "next/app";
 import { globalStyles } from "../styles/global";
 import Header from "../components/Header";
-import { Container } from "../styles/_app";
+import { Container } from "../styles/pages/_app";
 
 globalStyles();
 
