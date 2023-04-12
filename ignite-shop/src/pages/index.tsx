@@ -6,13 +6,7 @@ import "keen-slider/keen-slider.min.css";
 import { stripe } from "@/lib/stripe";
 import { GetStaticProps } from "next";
 import Link from "next/link";
-
-interface ProductType {
-  id: string;
-  name: string;
-  imageUrl: string;
-  price: string;
-}
+import { ProductType } from "../types/Product";
 
 interface HomeProps {
   products: ProductType[];
