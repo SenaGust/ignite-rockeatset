@@ -8,14 +8,34 @@ import { ProductType } from "@/src/types/Product";
 import { stripe } from "@/lib/stripe";
 import Stripe from "stripe";
 import Image from "next/image";
+import axios from "axios";
+import { useState } from "react";
 
 interface ProductProps {
   product: ProductType;
 }
 
 export default function Product({
-  product: { name, price, imageUrl, description },
+  product: { name, price, imageUrl, description, defaultPriceId },
 }: ProductProps) {
+  const [isBuying, setIsBuying] = useState(false);
+
+  const handleBuyProduct = async () => {
+    try {
+      setIsBuying(true);
+      const {
+        data: { checkoutUrl },
+      } = await axios.post<{ checkoutUrl: string }>("/api/checkout", {
+        priceId: defaultPriceId,
+      });
+
+      window.location.href = checkoutUrl;
+    } catch (err) {
+      setIsBuying(false);
+      console.error("Error: ", err);
+    }
+  };
+
   return (
     <ProductContainer>
       <ImageContainer>
@@ -28,7 +48,9 @@ export default function Product({
 
         <p>{description}</p>
 
-        <button>Buy now</button>
+        <button disabled={isBuying} onClick={handleBuyProduct}>
+          Buy now
+        </button>
       </ProductDetails>
     </ProductContainer>
   );
@@ -57,6 +79,7 @@ export const getStaticProps: GetStaticProps<
         imageUrl: product.images[0],
         name: product.name,
         description: product.description || "",
+        defaultPriceId: (product.default_price as Stripe.Price).id,
         price: new Intl.NumberFormat("pt-br", {
           style: "currency",
           currency: "BRL",
