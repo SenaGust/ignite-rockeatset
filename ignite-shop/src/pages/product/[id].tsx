@@ -40,7 +40,7 @@ export default function Product({
   return (
     <>
       <Head>
-        <title>{name} | Ignite Shop</title>
+        <title>{`${name} | Ignite Shop`}</title>
       </Head>
 
       <ProductContainer>
