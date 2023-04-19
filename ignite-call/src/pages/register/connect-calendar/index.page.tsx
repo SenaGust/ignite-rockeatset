@@ -1,13 +1,22 @@
 import { Button, Heading, MultiStep, Text } from "@ignite-ui/react";
-import { ArrowRight } from "phosphor-react";
-// import { api } from "../../../lib/axios"
+import { ArrowRight, Check } from "phosphor-react";
 import { Container, Header } from "../styles";
-import { ConnectBox, ConnectItem } from "./styles";
+import { ConnectBox, ConnectItem, AuthError } from "./styles";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export default function Register() {
-  // async function handleRegister() {
+  const { status, data } = useSession();
+  const router = useRouter();
 
-  // }
+  const hasAuthError = Boolean(router.query.error);
+  const IsSignedIn = status === "authenticated";
+
+  const handleConnectCalendar = async () => {
+    await signIn("google");
+  };
+
+  console.log("data", data);
 
   return (
     <Container>
@@ -24,13 +33,32 @@ export default function Register() {
       <ConnectBox>
         <ConnectItem>
           <Text>Google Calendar</Text>
-          <Button variant="secondary" size="sm">
-            Conectar
-            <ArrowRight />
-          </Button>
+          {!IsSignedIn && (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleConnectCalendar}
+            >
+              Conectar
+              <ArrowRight />
+            </Button>
+          )}
+          {IsSignedIn && (
+            <Button size="sm" disabled>
+              Conectado
+              <Check />
+            </Button>
+          )}
         </ConnectItem>
 
-        <Button type="submit">
+        {hasAuthError && (
+          <AuthError size="sm">
+            Falha ao se conectar ao Google, verifique se você habilitou as
+            permissões de acesso ao Google Calendar
+          </AuthError>
+        )}
+
+        <Button type="submit" disabled={!IsSignedIn}>
           Próximo passo
           <ArrowRight />
         </Button>
