@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Container, Form, FormError, Header } from "./styles";
+import { AxiosError } from "axios";
 
 const registerFormSchema = z.object({
   username: z
@@ -44,6 +45,10 @@ export default function Register() {
     try {
       await api.post("/users", { name, username });
     } catch (error) {
+      if (error instanceof AxiosError && error.response?.data?.message) {
+        alert(error.response.data.message);
+      }
+
       console.error(error);
     }
   };
