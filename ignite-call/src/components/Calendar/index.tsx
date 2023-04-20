@@ -8,21 +8,43 @@ import {
   CalendarHeader,
   CalendarTitle,
 } from "./styles";
+import dayjs from "dayjs";
+import { useState } from "react";
 
 export function Calendar() {
+  const [currentDate, setCurrentDate] = useState(dayjs().set("date", 1));
+
+  const handlePreviousMonth = () => {
+    setCurrentDate((state) => state.subtract(1, "month"));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentDate((state) => state.add(1, "month"));
+  };
+
   const shortWeekDays = getWeekDays({ short: true });
+  const currentMonth = currentDate.format("MMMM");
+  const currentYear = currentDate.format("YYYY");
 
   return (
     <CalendarContainer>
       <CalendarHeader>
         <CalendarTitle>
-          Dezembro <span>2022</span>
+          {currentMonth} <span>{currentYear}</span>
         </CalendarTitle>
         <CalendarActions>
-          <button>
+          <button
+            type="button"
+            onClick={handlePreviousMonth}
+            title="Mudar para o mês anterior"
+          >
             <CaretLeft />
           </button>
-          <button>
+          <button
+            type="button"
+            onClick={handleNextMonth}
+            title="Mudar para o próximo mês"
+          >
             <CaretRight />
           </button>
         </CalendarActions>

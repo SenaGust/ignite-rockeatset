@@ -3,6 +3,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { prisma } from "@/lib/prisma";
 import { Container, UserHeader } from "./styles";
 import { ScheduleForm } from "./components/ScheduleForm";
+import { ConfirmStep } from "./components/ConfirmStep";
 
 interface ScheduleProps {
   user: {
