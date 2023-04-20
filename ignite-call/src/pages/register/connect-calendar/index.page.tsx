@@ -16,6 +16,10 @@ export default function ConnectCalendar() {
     await signIn("google");
   };
 
+  const handleNextStep = async () => {
+    await router.push("/register/time-intervals");
+  };
+
   console.log("data", data);
 
   return (
@@ -27,7 +31,7 @@ export default function ConnectCalendar() {
           ocupadas e os novos eventos à medida em que são agendados.
         </Text>
 
-        <MultiStep size={4} currentStep={2} />
+        <MultiStep size={4} currentStep={4} />
       </Header>
 
       <ConnectBox>
@@ -58,7 +62,7 @@ export default function ConnectCalendar() {
           </AuthError>
         )}
 
-        <Button type="submit" disabled={!IsSignedIn}>
+        <Button type="submit" disabled={!IsSignedIn} onClick={handleNextStep}>
           Próximo passo
           <ArrowRight />
         </Button>

@@ -9,4 +9,8 @@ declare module "next-auth" {
     avatar_url: string;
     emailVerified: Date | null;
   }
+
+  interface Session {
+    user: User;
+  }
 }

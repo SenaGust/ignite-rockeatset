@@ -22,6 +22,8 @@ import {
   FormError,
 } from "./styles";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { api } from "@/lib/axios";
+import { useRouter } from "next/router";
 
 const timeIntervalsFormSchema = z.object({
   intervals: z
@@ -86,6 +88,7 @@ export default function TimeIntervals() {
       ],
     },
   });
+  const router = useRouter();
 
   const { intervals } = watch();
 
@@ -97,8 +100,13 @@ export default function TimeIntervals() {
   });
 
   const handleSetTimeIntervals = async (data: any) => {
-    const { intervals } = data;
-    console.log(intervals);
+    try {
+      const { intervals }: TimeIntervalsFormDataOutput = data;
+      await api.post("/users/time-intervals", { intervals });
+      router.push("/register/update-profile");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
