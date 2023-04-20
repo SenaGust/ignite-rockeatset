@@ -103,7 +103,7 @@ export default function TimeIntervals() {
     try {
       const { intervals }: TimeIntervalsFormDataOutput = data;
       await api.post("/users/time-intervals", { intervals });
-      router.push("/register/update-profile");
+      await router.push("/register/update-profile");
     } catch (error) {
       console.error(error);
     }
