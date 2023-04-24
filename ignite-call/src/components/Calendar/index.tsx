@@ -10,7 +10,7 @@ import {
 } from "./styles";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
-import { chunkArray } from "@/utils/chunck-array";
+import { chunkArray } from "@/utils/chunk-array";
 
 export function Calendar() {
   const [currentDate, setCurrentDate] = useState(dayjs().set("date", 1));
