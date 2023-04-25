@@ -12,7 +12,17 @@ import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { chunkArray } from "@/utils/chunk-array";
 
-export function Calendar() {
+interface CalendarProps {
+  onSelectDate: (date: Date) => void;
+  blockedWeekDays: number[]; // 0 - Sunday, [...] 7 - Saturday
+  blockedMonthDays: number[]; // 1,2,3,4,[...],31
+}
+
+export function Calendar({
+  blockedWeekDays,
+  blockedMonthDays,
+  onSelectDate,
+}: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(dayjs().set("date", 1));
 
   const handlePreviousMonth = () => {
@@ -46,7 +56,10 @@ export function Calendar() {
       })
       .map((date) => ({
         date,
-        disabled: date.endOf("day").isBefore(new Date()),
+        disabled:
+          date.endOf("day").isBefore(new Date()) ||
+          blockedMonthDays.includes(date.get("date")) ||
+          blockedWeekDays.includes(date.get("day")),
       }));
 
     const lastDayInCurrentMonth = currentDate.set(
@@ -107,7 +120,10 @@ export function Calendar() {
             <tr key={i}>
               {week.map(({ date, disabled }) => (
                 <td key={date.toISOString()}>
-                  <CalendarDay disabled={disabled}>
+                  <CalendarDay
+                    disabled={disabled}
+                    onClick={() => onSelectDate(date.toDate())}
+                  >
                     {date.get("date")}
                   </CalendarDay>
                 </td>
