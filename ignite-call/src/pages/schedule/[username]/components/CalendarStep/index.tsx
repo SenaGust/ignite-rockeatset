@@ -7,7 +7,7 @@ import {
   TimePickerItem,
   TimePickerList,
 } from "./styles";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { api } from "@/lib/axios";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
@@ -22,7 +22,12 @@ interface BlockedDays {
   blockedWeekDays: number[];
 }
 
-export function CalendarStep() {
+interface CalendarStepProps {
+  onSelectDateTime: (date: Date) => void;
+}
+
+export function CalendarStep({ onSelectDateTime }: CalendarStepProps) {
+  const [currentDate, setCurrentDate] = useState(dayjs().set("date", 1));
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const router = useRouter();
   const hasDaySelected = Boolean(selectedDate);
@@ -49,11 +54,12 @@ export function CalendarStep() {
   );
 
   const { data: blockedDays, isLoading } = useQuery<BlockedDays>(
-    ["blocked-days", selectedDateWithoutTime],
+    ["blocked-days", selectedDate],
     async () => {
       const response = await api.get(`/users/${username}/blocked-dates`, {
         params: {
-          date: selectedDateWithoutTime,
+          month: currentDate.get("month"),
+          year: currentDate.get("year"),
         },
       });
 
@@ -66,10 +72,21 @@ export function CalendarStep() {
     ? dayjs(selectedDate).format("DD[ de ]MMMM")
     : null;
 
+  const handleSelectTime = (hour: number) => {
+    const datetime = dayjs(selectedDate)
+      .set("hour", hour)
+      .startOf("hour")
+      .toDate();
+
+    onSelectDateTime(datetime);
+  };
+
   return (
     <Container isTimePickerOpen={hasDaySelected}>
       {!isLoading && blockedDays && (
         <Calendar
+          currentDate={currentDate}
+          setCurrentDate={setCurrentDate}
           blockedMonthDays={blockedDays.blockedMonthDays}
           blockedWeekDays={blockedDays.blockedWeekDays}
           onSelectDate={setSelectedDate}
@@ -87,6 +104,7 @@ export function CalendarStep() {
                 <TimePickerItem
                   key={hour}
                   disabled={!availability.availableTimes.includes(hour)}
+                  onClick={() => handleSelectTime(hour)}
                 >
                   {String(hour).padStart(2, "0")}:00h
                 </TimePickerItem>

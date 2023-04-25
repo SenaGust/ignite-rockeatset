@@ -5,6 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { api } from "@/lib/axios";
+import dayjs from "dayjs";
 
 const confirmFormSchema = z.object({
   name: z.string().min(3, { message: "O nome precisa no mínimo 3 caracteres" }),
@@ -14,7 +15,12 @@ const confirmFormSchema = z.object({
 
 type ConfirmFormData = z.infer<typeof confirmFormSchema>;
 
-export function ConfirmStep() {
+interface ConfirmStepProps {
+  schedulingDate: Date;
+  onCancel: () => void;
+}
+
+export function ConfirmStep({ schedulingDate, onCancel }: ConfirmStepProps) {
   const {
     register,
     handleSubmit,
@@ -35,18 +41,22 @@ export function ConfirmStep() {
     }
   };
 
-  const handleCancel = () => {};
+  const handleCancel = () => {
+    onCancel();
+  };
 
+  const date = dayjs(schedulingDate).format("DD[ de ]MMMM[ de ]YYYY");
+  const time = dayjs(schedulingDate).format("HH:mm");
   return (
     <ConfirmForm as="form" onSubmit={handleSubmit(handleConfirm)}>
       <FormHeader>
         <Text>
           <CalendarBlank />
-          22 de dezembro de 2022
+          {date}
         </Text>
         <Text>
           <Clock />
-          18:00h
+          {time}
         </Text>
       </FormHeader>
 

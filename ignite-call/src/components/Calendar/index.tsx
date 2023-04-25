@@ -8,29 +8,31 @@ import {
   CalendarHeader,
   CalendarTitle,
 } from "./styles";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { useMemo, useState } from "react";
 import { chunkArray } from "@/utils/chunk-array";
 
 interface CalendarProps {
+  currentDate: Dayjs;
+  setCurrentDate: (date: Dayjs) => void;
   onSelectDate: (date: Date) => void;
   blockedWeekDays: number[]; // 0 - Sunday, [...] 7 - Saturday
   blockedMonthDays: number[]; // 1,2,3,4,[...],31
 }
 
 export function Calendar({
+  currentDate,
+  setCurrentDate,
   blockedWeekDays,
   blockedMonthDays,
   onSelectDate,
 }: CalendarProps) {
-  const [currentDate, setCurrentDate] = useState(dayjs().set("date", 1));
-
   const handlePreviousMonth = () => {
-    setCurrentDate((state) => state.subtract(1, "month"));
+    setCurrentDate(currentDate.subtract(1, "month"));
   };
 
   const handleNextMonth = () => {
-    setCurrentDate((state) => state.add(1, "month"));
+    setCurrentDate(currentDate.add(1, "month"));
   };
 
   const shortWeekDays = getWeekDays({ short: true });

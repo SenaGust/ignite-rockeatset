@@ -98,7 +98,7 @@ export default async function handler(
       })
     )
   )
-    .filter(({ isAvailable }) => !isAvailable)
+    .filter(({ isAvailable }) => isAvailable)
     .map(({ day }) => day.get("date"));
 
   return res.status(200).json({
